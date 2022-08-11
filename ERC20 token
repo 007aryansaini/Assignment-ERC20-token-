@@ -1,0 +1,34 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.4;
+
+import "@openzeppelin/contracts@4.7.3/token/ERC20/ERC20.sol";
+
+
+
+contract Digicoin is ERC20 {
+    address public owner;
+
+    // Receiver who will be given 10% of the total suppy
+    address constant receiver = 0x09F59a58169B42e426a6398b167128F4AD4cC0dF;
+    constructor() ERC20("Digicoin", "DGC") {
+        _mint(msg.sender, 10000 * 10 ** decimals());
+        // Setting owner to the person who deploys the contract so that only owner can tranfer to the receiver
+        owner = msg.sender;
+    }
+
+    // Modifier such that only owner can transfer to the receiver
+    modifier onlyOwner{
+        require( msg.sender == owner , "Only owner can transfer");
+        _;
+    }
+
+    // Funtion to transfer 10% of the total supply to the receiver
+
+    function tranferToGivenAddress() public onlyOwner {
+            
+            uint amount = (totalSupply() /100) * 10;
+            transfer(receiver , amount);
+    }
+
+    
+}
